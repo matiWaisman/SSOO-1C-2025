@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+// No esta terminado
 // Usar write en vez de printf y revisar el orden de los sleeps.
 int main(){
     pid_t pid_julieta = fork();

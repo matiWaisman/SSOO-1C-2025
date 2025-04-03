@@ -18,7 +18,7 @@ int main(){
         while (contador < 3){
             printf("Ping, %d \n", getpid());
             kill(pid_hijo,SIGUSR1);
-            sleep(1); // Le doy tiempo al hijo para que responda
+            sleep(1); // Le doy tiempo al hijo para que responda podria meter un sleep y hacer que el hijo le mande otra señal
             contador++;
             if(contador == 3){
                 printf("Queres seguir? [y/n]: ");

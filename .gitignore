@@ -1,13 +1,2 @@
-maquinas-virtuales/**
-*
-!*.*
-!*.c
-!*.h
-!*.py
-!*.sh
-!*.md
-!*.txt
-!*.pdf
-!*.cpp
-!*.mk
-!Makefile
+maquinas-virtuales/
+bin/
