@@ -5,11 +5,11 @@
 | Proceso  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1* | P2* | P3  | P3* | P4* | P5  | P5  | P5  | P5  | P5* |
 
 $$
-\text{Waiting time promedio} = \frac{0 + 10 + 11 + 13 + 14}{5} = \frac{48}{5} = 9.6
+\text{Waiting time promedio} = \frac{0 + 10 + 11 + 13 + 14}{5} = 9.6
 $$
 
 $$
-\text{Turnaround promedio} = \frac{10 + 11 + 13 + 14 + 18}{5} = \frac{66}{5} = 13.2
+\text{Turnaround promedio} = \frac{10 + 11 + 13 + 14 + 19}{5} = 13.4
 $$
 
 ---
@@ -21,11 +21,11 @@ $$
 | Proceso  | P2* | P4* | P3  | P3* | P5  | P5  | P5  | P5  | P5* | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1* |
 
 $$
-\text{Waiting time promedio} = \frac{0 + 1 + 2 + 5 + 9}{5} = \frac{17}{5} = 3.4
+\text{Waiting time promedio} = \frac{0 + 1 + 2 + 4 + 9}{5} = 3.2
 $$
 
 $$
-\text{Turnaround promedio} = \frac{1 + 2 + 4 + 9 + 19}{5} = \frac{35}{5} = 7
+\text{Turnaround promedio} = \frac{1 + 2 + 4 + 9 + 19}{5} = 7
 $$
 
 ---
@@ -37,11 +37,11 @@ $$
 | Proceso  | P2* | P5  | P5  | P5  | P5  | P5* | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1  | P1* | P3  | P3* | P4* |
 
 $$
-\text{Waiting time promedio} = \frac{0 + 1 + 6 + 16 + 18}{5} = \frac{41}{5} = 8.2
+\text{Waiting time promedio} = \frac{0 + 1 + 6 + 16 + 18}{5} = 8.2
 $$
 
 $$
-\text{Turnaround promedio} = \frac{1 + 6 + 16 + 18 + 19}{5} = \frac{60}{5} = 12
+\text{Turnaround promedio} = \frac{1 + 6 + 16 + 18 + 19}{5} = 12
 $$
 
 ---
@@ -53,11 +53,11 @@ $$
 | Proceso  | P1  | P2* | P3  | P4* | P5  | P1  | P3* | P5  | P1  | P5  | P1  | P5  | P1  | P5* | P1  | P1  | P1  | P1  | P1* |
 
 $$
-\text{Waiting time promedio} = \frac{9 + 1 + 5 + 3 + 9}{5} = \frac{27}{5} = 5.4
+\text{Waiting time promedio} = \frac{9 + 1 + 5 + 3 + 9}{5} = 5.4
 $$
 
 $$
-\text{Turnaround promedio} = \frac{19 + 2 + 7 + 4 + 14}{5} = \frac{46}{5} = 9.2
+\text{Turnaround promedio} = \frac{19 + 2 + 7 + 4 + 14}{5} = 9.2
 $$
 
 
