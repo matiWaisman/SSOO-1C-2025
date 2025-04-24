@@ -1,0 +1,3 @@
+Si para para almacenar los pedidos que se encuentran en espera en un semáforo en lugar de usar una Cola (First In First Out) usáramos una Pila (Last In First Out) podría llevar a inanición si es que los procesos tratan de acceder a la zona protegida constantemente. 
+
+Podría pasar que un primer proceso pida entrar a la sección protegida y todavía no pueda, luego más procesos tratan de entrar y se apilan. Llega un momento en el que se libera el recurso y se empiezan a desapilar pedidos, pero a la vez que se desapilan se vuelven a apilar todo el tiempo, haciendo que nunca (o se tarde muchísimo) en llegar hacia abajo de la pila dejando al primer proceso que pidió acceso en starvation. 
