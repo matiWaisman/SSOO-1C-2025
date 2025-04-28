@@ -1,0 +1,5 @@
+Cuando administramos la memoria asignando bloques contiguos a los procesos, puede producirse fragmentación externa, que ocurre cuando existe suficiente memoria libre en total, pero está repartida en bloques no contiguos. Esto puede impedir satisfacer la solicitud de memoria de un proceso. Podemos tener N bytes disponibles para un proceso que los pide, pero si estos no están contiguos en memoria, no podemos satisfacer la solicitud del proceso.
+
+En cambio, cuando usamos paginación, la memoria se divide en bloques fijos (páginas). Como no es necesario que las páginas de un proceso estén contiguas en memoria física, no hay fragmentación externa.
+
+Sin embargo, puede ocurrir fragmentación interna, que se da cuando una página asignada a un proceso no se utiliza por completo. Ese espacio libre dentro de la página no puede ser utilizado por otro proceso, lo que lleva a desperdicio de memoria.
