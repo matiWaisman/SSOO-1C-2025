@@ -13,22 +13,20 @@ enum { READ, WRITE };
 int fd_hijos_padre[5][2]; // Por este pipe los hijos le van a comunicar al padre cuando un cliente manda un mensaje.
 int fd_padre_hijos[5][2]; // Por este pipe el padre le va a comunicar a los hijos cuando un cliente manda un mensaje.
 // Estos dos arrays de pipes trabajan en conjunto. Cuando un cliente manda un mensaje lo va a leer el hijo, 
-// el hijo escribe en el pipe y le manda una señal al padre para que el padre le comunique a los demas hijos que llego un mensaje.  
+// El hijo escribe en el pipe y le manda una señal al padre para que el padre le comunique a los demas hijos que llego un mensaje.  
 // Los otros hijos ahi le van a mandar al cliente que otro proceso mando un mensaje.
 pid_t pids_hijos[5];
 int lugar_del_hijo;
 int socket_cliente;
 
 int armar_socket_cliente(int socket_servidor){
-    int socket_cliente;
-
     struct sockaddr_un addr_cliente;
 
     unsigned int length_cliente = sizeof(addr_cliente);
 
-    socket_cliente = accept(socket_servidor, (struct sockaddr *) &addr_cliente, &length_cliente);
+    int socket = accept(socket_servidor, (struct sockaddr *) &addr_cliente, &length_cliente);
 
-    return socket_cliente;
+    return socket;
 }
 
 int armar_socket_servidor(){
@@ -48,11 +46,12 @@ int armar_socket_servidor(){
     return socket_servidor;
 }
 
-void handler_sigchld(){
+void handler_sigusr_1(){
     printf("Estamos en el padre resolviendo la lectura del mensaje\n");
     pid_t pid_que_llamo;
+    read();
     int status;
-    pid_que_llamo = wait(&status); // ¡ahora sí!
+    pid_que_llamo = wait(&status); // Te quedas colgado 
     printf("%d\n", pid_que_llamo);
     char buffer[1024];
     // Primero busco la posicion del elemento que me hizo el sigchild
@@ -70,12 +69,12 @@ void handler_sigchld(){
     for(int j = 0; j < 5; j++){
         if(pids_hijos[j] != 0 && i != j){
             write(fd_padre_hijos[j][WRITE], &buffer, sizeof(buffer));
-            kill(pids_hijos[j], SIGUSR1);
+            kill(pids_hijos[j], SIGUSR2);
         }
     }
 }
 
-void handler_sigusr(){
+void handler_sigusr_2(){
     printf("Soy un hijo y recibi que le tengo que avisar a mi cliente que le mandaron un mensaje\n");
     char buffer[1024];
     read(fd_padre_hijos[lugar_del_hijo][READ], &buffer, sizeof(buffer));
@@ -83,18 +82,22 @@ void handler_sigusr(){
     send(socket_cliente, &buffer, sizeof(buffer), 0);
 }
 
+
+// Usar un solo pipe en donde los hijos le comuniquen el mensaje y quien son.
+// Cuando el hijo recibe un mensaje le sigue mandando el signal
 int main(){
     int socket_servidor = armar_socket_servidor();
-    
+    // Inicializamos los pipes de comunicacion.  
     for(int i = 0; i < 5; i++){
         pids_hijos[i] = 0; 
         pipe(fd_hijos_padre[i]);
         pipe(fd_padre_hijos[i]);
     }
     // Si pids_hijos[i] == 0 es porque no hay un cliente 
-    signal(SIGCHLD, handler_sigchld);
+    signal(SIGUSR1, handler_sigusr_1);
+    // sigaction()
     while(1){
-        armar_socket_cliente(socket_servidor);
+        socket_cliente = armar_socket_cliente(socket_servidor);
         printf("Se conecto un cliente\n");
         for(int i = 0; i < 5; i++){
             if(pids_hijos[i] == 0){
@@ -111,7 +114,9 @@ int main(){
         }
         else{
             // Soy el hijo
-            signal(SIGUSR1, handler_sigusr);
+            // Probar usar sigaction en vez de signal para setear el bit de que le pase el id
+            signal(SIGUSR2, handler_sigusr_2);
+            pid_t mi_pid = getpid(); // Capaz esta de mas esto 
             close(fd_hijos_padre[lugar_del_hijo][READ]);
             close(fd_padre_hijos[lugar_del_hijo][WRITE]);
             while(1){ // (Mientras haya una conexion)
@@ -122,8 +127,10 @@ int main(){
                 if(n < 1){
                     break;
                 }
+                // Le mandamos al padre nuestro process id y despues el mensaje. 
+                write(fd_hijos_padre[lugar_del_hijo][WRITE], &mi_pid, sizeof(mi_pid));
                 write(fd_hijos_padre[lugar_del_hijo][WRITE], &buffer, sizeof(buffer));
-                kill(getppid(), SIGCHLD);
+                kill(getppid(), SIGUSR1); // Le avisamos al padre que lea el pipe y le avise a los demas
             }
             exit(EXIT_SUCCESS);
         }

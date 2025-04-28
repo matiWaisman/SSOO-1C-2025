@@ -7,6 +7,10 @@
 #include <sys/un.h>
 #include<signal.h>
 
+void handler_sigchld(){
+    wait(NULL);
+}
+
 int armar_socket_conexion(){
     int socket_conexion;
     struct sockaddr_un addr_servidor; // sockaddr_un especifica que es un adress de un socket de unix
@@ -30,6 +34,7 @@ int armar_socket_conexion(){
 int main(int argc, char* argv[]){
     char* nombre_usuario = argv[1];
     int socket_conexion = armar_socket_conexion();
+    signal(SIGCHLD, handler_sigchld);
     pid_t pid_hijo = fork();
     if(pid_hijo != 0){
         // Estamos en el padre
@@ -40,7 +45,7 @@ int main(int argc, char* argv[]){
                 kill(pid_hijo, SIGTERM);
                 break;
             }
-                tf("%s\n", buffer);
+                printf("%s\n", buffer);
         }
     }
     else{
@@ -49,7 +54,6 @@ int main(int argc, char* argv[]){
         while(1){
             printf("Contate algo: ");
             if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
-                // eliminás el '\n' si querés
                 buffer[strcspn(buffer, "\n")] = '\0';
                 send(socket_conexion, buffer, strlen(buffer) + 1, 0);
             } else {
