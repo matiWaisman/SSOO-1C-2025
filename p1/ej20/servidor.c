@@ -69,6 +69,7 @@ void wait_hijos(){
 void cerrar_pipes(int fds[][2]){
     for(int i = 0; i < 3; i++){
         close(fds[i][READ]);
+        close(fds[i][WRITE]);
     }
 }
 
@@ -99,6 +100,7 @@ int main(){
             }
         }
         int es_primo = !leer_pipes(fd_h_p);
+        // Cierro los pipes porque despues voy a crear otros para el proximo cliente
         cerrar_pipes(fd_h_p);
         wait_hijos();
         printf("Enviando respuesta: %d\n", es_primo);

@@ -4,6 +4,50 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+void handler_padre(){
+    printf("Pong del padre con pid: %d\n", getpid());
+}
+
+void handler_hijo(){
+    printf("Ping del hijo con pid: %d\n", getpid());
+    kill(getppid(), SIGUSR1);
+}
+
+int main(){
+    pid_t pid_hijo = fork();
+    if(pid_hijo != 0){
+        // Estamos en el padre
+        sleep(1); // Meto un sleep para que el hijo setee el signal
+        signal(SIGUSR1, handler_padre); // Defino el handler para responder al hijo 
+        int status;
+        char caracter;
+        int sigo = 1;
+        while(sigo){
+            for(int i = 0; i < 3; i++){
+                kill(pid_hijo, SIGUSR2);
+                pause(); // Esperamos hasta que nos mande una señal el hijo. Despues de recibir la señal y ejecutar el hanlder vamos a la siguiente linea
+            }
+            printf("Queres seguir? [y/n]: ");
+            scanf(" %c", &caracter);
+            if(caracter != 'y'){
+                sigo = 0;
+            }
+        }
+        kill(pid_hijo, SIGTERM);
+        exit(EXIT_SUCCESS);
+    }
+    else {
+        // Estamos en el hijo 
+        signal(SIGUSR2, handler_hijo);
+        while(1){
+            pause();
+        }
+    }
+}
+
+/*
+Version alternativa usando un solo handler
+
 void handler(){
     printf("Pong, %d \n", getpid());
 }
@@ -39,3 +83,4 @@ int main(){
     }
     return 0;
 }
+*/

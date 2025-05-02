@@ -7,9 +7,13 @@ void exec(const char *arg){
     int status;
     pid_t proceso_hijo = fork();
     if(proceso_hijo == 0){
-        execl("/bin/sh", "sh", "-c", arg, (char *)NULL);
+        execl("/bin/sh", "sh", "-c", arg, (char *)NULL); 
+        // El primer argumento es la ruta al ejecutable. El segundo el nombre del programa.
+        // El tercero le indica al shell que interprete los argumentos como un programa escrito en la terminal.
+        // El NULL indica que se terminaron los parametros
         // Sería mejor usar execvp que recibe una lista de argumentos. Pero uso execl como dice el manual que usa system.
-        exit(EXIT_SUCCESS);
+        // Si execl funciona bien nunca deberiamos volver a la linea de abajo. La unica forma de llegar a la linea de abajo es que se rompa todo, asi que en ese caso hacemos un exit con failure
+        exit(EXIT_FAILURE);
     }
     else{
         waitpid(proceso_hijo, &status, 0);

@@ -9,15 +9,28 @@ enum { READ, WRITE };
 
 int result_ready = 0;
 
-void ejecutarHijo(int pipe_padre_hijo[], int pipe_hijo_padre[]){
+// Falta terminarlo 
+
+void ejecutarHijo(int i, int pipes[][2], int cantidad_procesos){
+    int lugar_escritura_hijo_padre = i + cantidad_procesos;
+    int pipe_padre_hijo[] = pipes[i];
+    int pipe_hijo_padre[] = pipes[lugar_escritura_hijo_padre];
     int parametro_calculo;
     read(pipe_padre_hijo[READ], &parametro_calculo, sizeof(int));
 
     // Cierro todos los pipes que no voy a usar
-    // Preguntar si cada proceso no deberia cerrar todos los otros pipes de i
     close(pipe_padre_hijo[WRITE]);
     close(pipe_padre_hijo[READ]);
     close(pipe_hijo_padre[READ]);
+
+    // Cierro todos los pipes que no son mios 
+    for(int j = 0; j < cantidad_procesos * 2; j++){
+        if(j != lugar_escritura_hijo_padre && j != i){
+            close(pipes[j][READ]);
+            close(pipes[j][WRITE]);
+        }
+    }
+
 
     signal(SIGCHLD, handler_termino_nieto); // Defino el handler que se va a encargar de saber cuando termina el nieto
 
@@ -30,7 +43,6 @@ void ejecutarHijo(int pipe_padre_hijo[], int pipe_hijo_padre[]){
         while(1){
             if(result_ready){
                 dup2(pipe_nieto_hijo[READ], pipe_hijo_padre[WRITE]);
-                // Preguntar si hacen falta estos close. Que pasa con el exit si no hace close automatico
                 close(pipe_hijo_padre[WRITE]);
                 close(pipe_nieto_hijo[READ]);
                 exit(EXIT_SUCCESS);
@@ -49,6 +61,7 @@ void ejecutarHijo(int pipe_padre_hijo[], int pipe_hijo_padre[]){
 }
 
 void handler_termino_nieto(){
+    wait(NULL); // Para que no quede zombie el nieto
     result_ready = 1;
 }
 
@@ -70,7 +83,7 @@ int main(int argc, char* argv[]){
     for (int i = 0; i < N; i++) {
         int pid = fork();
         if (pid == 0) {
-            ejecutarHijo(i, pipes);
+            ejecutarHijo(i, pipes, N);
             return 0;
         } else {
             int numero = dameNumero(pid);
@@ -92,7 +105,7 @@ int main(int argc, char* argv[]){
             }
 
             char termino = 0;
-            write(pipes[i][WRITE], &termino, sizeof(termino)); // Preguntar que onda esto de termino
+            write(pipes[i][WRITE], &termino, sizeof(termino)); 
             read(pipes[N + i][READ], &termino, sizeof(termino));
 
             if (termino) {

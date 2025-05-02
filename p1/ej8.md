@@ -38,3 +38,5 @@ Dato Padre: 0
 
 Esto pasa porque al hacer el fork ambos procesos van a arrancar con dato valiendo cero, pero la copia en memoria del valor dato es distinta, porque los procesos no comparten memoria. 
 Si se ejecuta primero el hijo se va a incrementar el valor de dato pero cuando se ejecute el padre como la memoria no se comparte entre procesos entonces dato va a seguir valiendo cero. 
+
+Tampoco podemos asegurar el orden de los prints porque depende del orden en el que los ejecute el scheduler. 

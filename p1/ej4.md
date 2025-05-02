@@ -11,4 +11,4 @@ Blocked -> Ready: (Preguntar como se entera el scheduler que están listos los r
 
 Ready -> Running: El proceso está pausado y cuando llega el momento de ejecutar otro proceso el scheduler, según su politica, elige a este proceso para que siga teniendo tiempo de ejecución. Se actualizan los valores de los registros de acuerdo a los que están guardados en el PCB de este proceso y se le da tiempo de computo. 
 
-New -> Ready: (Preguntar que elementos están involucrados en inicializar la tarea dentro del kernel)
+New -> Ready: TODO

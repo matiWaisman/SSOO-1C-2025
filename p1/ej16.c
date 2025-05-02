@@ -9,7 +9,8 @@ enum { READ, WRITE };
 
 // Esta lleno de codigo repetido. Habria que refactorizarlo
 // El 53 es un parche pq si no escribe hasta 47
-// Diria que el comportamiento de mensajes es igual al de las funciones ficticias bsend y breceive porque al irse bloqueando los procesos se coordina la escritura y lectura
+// Diria que el comportamiento de mensajes es igual al de las funciones ficticias bsend y breceive porque al irse bloqueando los procesos al leer sus pipes se coordina la escritura y lectura. 
+// Pero la diferencia es que el pipe tiene una cola de mensajes con capacidad mayor a cero, y salvo que este llena esa cola la escritura no es bloqueante. A diferencia de bsend que siempre es bloqueante.
 
 void padre(int fd_p_h1[], int fd_h2_p[], pid_t pid_hijo_1, pid_t pid_hijo_2){
     close(fd_p_h1[READ]);
@@ -26,6 +27,7 @@ void padre(int fd_p_h1[], int fd_h2_p[], pid_t pid_hijo_1, pid_t pid_hijo_2){
     }
     close(fd_p_h1[WRITE]);
     close(fd_h2_p[READ]);
+    // Hacemos los waits para que no queden zombies
     waitpid(pid_hijo_1, NULL, 0);
     waitpid(pid_hijo_2, NULL, 0);
 }

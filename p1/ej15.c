@@ -13,8 +13,9 @@ void ejecutar_hijo_1(int pipe_fd[]) {
     dup2(pipe_fd[WRITE], STDOUT_FILENO);
     char *args[] = {"ls", "-al", NULL};
     execvp("ls", args);
+    // Si estamos aca abajo es porque fallo el exec. Asi que cerramos el pipe y hacemos exit failure
     close(pipe_fd[WRITE]); // Cierro
-    exit(EXIT_SUCCESS);
+    exit(EXIT_FAILURE);
 }
 
 // Debe ejecutar "wc -l"
@@ -23,8 +24,9 @@ void ejecutar_hijo_2(int pipe_fd[]) {
     dup2(pipe_fd[READ], STDIN_FILENO);
     char *args[] = {"wc", "-l", NULL};
     execvp("wc", args);
-    close(pipe_fd[READ]); // Cierro la punta de lectura 
-    exit(EXIT_SUCCESS);
+    // Si estamos aca abajo es porque fallo el exec. Asi que cerramos el pipe y hacemos exit failure
+    close(pipe_fd[READ]); 
+    exit(EXIT_FAILURE);
 }
 
 int main(){

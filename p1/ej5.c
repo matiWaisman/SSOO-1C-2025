@@ -5,7 +5,7 @@
 #include "ej5.h"
 
 void abraham() {
-    pid_t proceso_homero = fork(); // Preguntar el tema de los nombres para que sea mas claro
+    pid_t proceso_homero = fork(); 
     if (proceso_homero != 0){
         printf("Hola soy Abraham mi pid es: %d \n", getpid());
         wait(NULL); // Esperar a que termine Homero
