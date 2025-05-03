@@ -67,7 +67,7 @@ while(1){
 El del proceso B va a ser:
 
 ```c
-cantidadEjecucionesB = 0;
+cantidadEjecucionesB = 0; // Obs que no hace falta que sea atomica.
 while(1){
     permisoB.wait();
     cantidadEjecucionesB++;
@@ -106,7 +106,7 @@ Primero definimos en memoria compartida:
 permisoConsumidor = sem(0)
 permisoProductor = sem(1)
 mutex = sem(1)
-cantidadConsumidores = 0
+cantidadConsumidores = 0 // Como tanto el proceso B como el proceso C van a usar esta variable o la hacemos atomica o usamos un mutex. En este caso uso un mutex.
 ```
 
 El código para el proceso A es:
@@ -152,6 +152,20 @@ while(1){
 }
 ```
 
+El ciclo de ejecución comienza con el proceso `A` pasando su semáforo, ya que lo inicializamos en 1. Este va a incrementar en dos los semáforos de los consumidores y luego se volverá a bloquear hasta que su semáforo sea incrementado nuevamente por el último de los dos consumidores.
+
+Los procesos `B` y `C` tienen exactamente el mismo código; lo único que cambia es la ejecución del `print`, que representa la ejecución de su programa ficticio.
+
+Estos procesos esperan a que `A` produzca para poder pasar su semáforo. Una vez que lo hacen y ejecutan su función, acceden a una zona protegida para modificar la variable no atómica `cantidadConsumidores`. En esa zona, deciden si todavía queda un proceso por consumir o si ya es hora de volver a producir. Como ambos no pueden acceder simultáneamente a la zona crítica, el primero en entrar simplemente actualizará la variable, mientras que el segundo, luego de actualizarla, le enviará el `signal` al productor para que produzca nuevamente.
+
+No va a haber inanición porque en cada ciclo de ejecución se realizan dos señales a los consumidores, y de esos dos, uno siempre le envía una señal al productor para que vuelva a ejecutarse.
+
+Es importante observar que pueden darse casos como `ABB`, `ABC`, `ACB` o `ACC` debido a lo siguiente:
+
+- Para que se ejecute dos veces el mismo consumidor, el *scheduler* puede darle suficiente tiempo como para que llegue a ejecutar el `while` dos veces, o puede interrumpirlo durante su segunda ejecución. Como `A` y el otro consumidor están bloqueados en un `wait`, el consumidor que estaba en ejecución puede continuar con su segundo ciclo.
+- Para que se ejecuten dos consumidores distintos, el *scheduler* puede interrumpir a uno mientras está corriendo y darle tiempo de CPU al otro. Si el primero fue interrumpido mientras se encontraba en la zona protegida, el segundo no podrá acceder a ella hasta que el primero salga ejecutando `mutex.signal()`.
+
+
 ---
 
 ## Caso 4
@@ -169,7 +183,7 @@ permisoC = sem(0)
 El código del proceso A va a ser:
 
 ```c
-proximoAEjecutar = 'B';
+proximoAEjecutar = 'B'; // obs que no hace falta que sea atomica ni usar un mutex porque el unico proceso que la usa es el A y el A se ejecuta en un unico Thread
 while(1){
     permisoA.wait();
     print("a");
@@ -179,7 +193,7 @@ while(1){
     }
     else{
         proximoAEjecutar = 'B';
-        permisoB.signal();
+        permisoB.signal(); // Se podrian hacer dos signals aca y sacar el cantidadDeEjecuciones del codigo de B.
     }
 }
 ```
@@ -187,7 +201,7 @@ while(1){
 El código del proceso B va a ser:
 
 ```c
-cantidadDeEjecuciones = 0;
+cantidadDeEjecuciones = 0; // obs que no hace falta que sea atomica ni usar un mutex porque el unico proceso que la usa es el B y el B no se ejecuta en mas de un Thread a la vez. 
 while(1){
     permisoB.wait();
     print("b");

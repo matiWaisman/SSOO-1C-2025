@@ -18,7 +18,7 @@ else:
     critica()
 ```
 
-Así se va a producir un efecto cascada: una vez que el `n`-ésimo proceso haga el signal, los `n`-1 procesos que estaban esperando al semáforo al pasar la barrera van a hacerle `signal` al otro, destrabándolos.
+Así se va a producir un efecto cascada: una vez que el `n`-ésimo proceso haga el signal, los `n`-1 procesos que estaban esperando al semáforo al pasar la barrera van a hacerle `signal` al otro, destrabándolos y evitando la inanición. 
 
 Y no hace falta que el proceso `n`-ésimo haga wait también, ya que como se está manejando bien la zona crítica de modificar `count`, solo un proceso va a llegar a que la condición del if sea verdadera.
 

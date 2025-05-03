@@ -1,5 +1,5 @@
-El código sí cumple con que: "cada vez que un proceso lee de la variable compartida, previamente solicita el mutex y luego lo libera".  
-Pero entendiendo que lo que queremos es que en todo momento todos los procesos estén operando sobre un mismo valor de `x`, el código proporcionado **no lo cumple** y sufre de **race condition**, porque varía la ejecución del programa dependiendo del orden de ejecución de los procesos, cosa que no debería pasar si estuviera bien programado.
+El código sí cumple con que: "cada vez que un proceso lee de la variable compartida, previamente solicita el mutex y luego lo libera". Pero no solicita el mutex para actualizarla. 
+Entendiendo que lo que queremos es que en todo momento todos los procesos estén operando sobre un mismo valor de `x`, el código proporcionado **no lo cumple** y sufre de **race condition**, porque varía la ejecución del programa dependiendo del orden de ejecución de los procesos, cosa que no debería pasar si estuviera bien programado.
 
 El problema es que al actualizar el valor de `x`, el scheduler puede interrumpir al proceso antes de hacer el store en `x`, y otro proceso puede leer el valor viejo de `x` y hacer operaciones sobre él. Cuando el proceso que había sido pausado está a punto de hacer store, termina sobrescribiendo `x` con un valor viejo.  
 Por lo tanto, no estamos cumpliendo que todos los procesos estén operando con el mismo valor de `x` en todo momento.

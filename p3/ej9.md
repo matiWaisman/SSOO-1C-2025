@@ -10,3 +10,6 @@ Cada proceso, al terminar de ejecutar sus $a_i$, entra en una **sección crític
 El último proceso en llegar, es decir, en el cual `contador == N`, hace un `barrera.signal()` para despertar a uno de los procesos que estaban esperando.
 
 Luego, cada proceso que se despierta del `barrera.wait()` realiza a su vez un `barrera.signal()` antes de continuar con sus $b_i$. Esto genera un efecto en cascada, donde se desbloquea a todos los procesos que estaban esperando en la barrera, asegurando que las $b_i$ comiencen solo después de que todos hayan terminado sus $a_i$.
+
+Otra posibilidad puede ser, como en el ejercicio 6, usar una variable atómica `cantidadDeEjecutados`, y hasta que esta no sea igual a la cantidad de procesos, no se van a ejecutar los $b_i$. Tiene las mismas ventajas y desventajas, respecto a usar semáforos, que las nombradas en el ejercicio 6.
+
