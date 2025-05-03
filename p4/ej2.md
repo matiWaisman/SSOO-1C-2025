@@ -1,6 +1,6 @@
 ## Punto A
 
-Cuando usamos Best Fit para asignar memoria, asignamos siempre el hueco más chico que sea suficientemente grande como para contener la memoria que queremos asignar.
+Cuando usamos **Best Fit** para asignar memoria, asignamos siempre el primer hueco más chico que sea suficientemente grande como para contener la memoria que queremos asignar.
 
 Teniendo disponibles para usar particiones de: `8 MB, 1 MB, 4 MB, 512 KB, 512 KB y 2 MB`
 Y recibiendo las solicitudes en orden de: `500 KB, 6 MB, 3 MB, 20 KB, 4 MB`
@@ -27,7 +27,7 @@ La cantidad de memoria desperdiciada son `4 MB + 504 KB`, que son aprox `4.492 M
 
 ### Usando Worst Fit
 
-Cuando usamos Worst Fit, asignamos siempre al bloque que pueda contener la solicitud lo más grande disponible.
+Cuando usamos **Worst Fit**, asignamos siempre al bloque que pueda contener la solicitud lo más grande disponible.
 
 #### Solicitud de `500 KB`
 El hueco más grande que puede contenerlo es el de `8 MB`, así que lo mandamos ahí y nos quedan: `7.514 MB, 1 MB, 4 MB, 512 KB, 512 KB y 2 MB`
@@ -46,7 +46,7 @@ No tenemos ningún bloque que pueda contener `4 MB`, así que siamo fuori.
 
 ### Usando First Fit
 
-First Fit manda la solicitud al primer bloque lo suficientemente grande que pueda contener la solicitud.
+**First Fit** manda la solicitud al primer bloque lo suficientemente grande que pueda contener la solicitud.
 
 #### Solicitud de `500 KB`
 El primer bloque que lo puede contener es el de `8 MB`, así que nos queda el mismo primer paso que usando Worst Fit: `7.514 MB, 1 MB, 4 MB, 512 KB, 512 KB y 2 MB`.

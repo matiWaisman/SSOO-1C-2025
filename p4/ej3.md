@@ -21,7 +21,7 @@ Sabiendo que el sistema está haciendo trashing, agregar más procesos a la cola
 #### Disminuyendo el grado de multiprogramación
 Suponiendo que todos los procesos necesitan más o menos la misma cantidad de páginas en memoria para poder ejecutarse, algo bastante alejado de la realidad, este cambio puede ayudar a disminuir la cantidad de page faults, porque al haber menos procesos tratando de ejecutarse va a hacer falta una menor cantidad de page swaps al querer ejecutar un proceso.
 
-Que haya menos page faults disminuiría/eliminaría el trashing y aumentaría el uso de la CPU porque hay más probabilidades de que al querer ejecutar un proceso lo que necesitamos para ejecutarlo ya esté presente en memoria principal y no haya que hacer una búsqueda a disco/page swap. Así que es un buen cambio para el sistema.
+Que haya menos page faults disminuiría/mitigaría el trashing y aumentaría el uso de la CPU porque hay más probabilidades de que al querer ejecutar un proceso lo que necesitamos para ejecutarlo ya esté presente en memoria principal y no haya que hacer una búsqueda a disco/page swap. Así que es un buen cambio para el sistema.
 
 Si los procesos que eliminamos de la cola son procesos que usan pocas páginas y/o las escriben poco y dejamos los que más páginas precisan y más las escriben, seguiríamos con el mismo problema, pero suponemos que todos hacen y precisan más o menos lo mismo para concluir que disminuye la cantidad de page faults.
 
