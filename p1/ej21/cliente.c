@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
                 kill(pid_hijo, SIGTERM);
                 break;
             }
-                // Control secuence para borrar el contate algo 
+                // Control secuence para borrar el ?
                 printf("%s: %s\n", mensaje_recibido.nombre_cliente, mensaje_recibido.buffer);
                 printf("? ");
                 fflush(stdout); 
