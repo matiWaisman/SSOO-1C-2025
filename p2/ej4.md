@@ -17,9 +17,11 @@ Lo mismo que SJF.
 Si tenemos muchos procesos de uso de la CPU intensivos y otros de menor uso interactivos los procesos interactivos tendrían un Response Time altisimo, aunque no entra en la definición de starvation porque teoricamente tarde o temprano les va a tocar el cpu.
 
 ### Colas de Multinivel
-Al ser una implementación de prioridades estaticas sigue el problema mencionado anteriormente. Si tenemos procesos con menor prioridad y se siguen agregando procesos con mayor prioridad por más que los procesos prioritarios tengan un menor Waiting Time a los procesos menos prioritarios nunca les llega el cpu. 
+Al ser una implementación de prioridades estaticas sigue el problema mencionado anteriormente. Si tenemos procesos con menor prioridad y se siguen agregando procesos con mayor prioridad por más que los procesos prioritarios tengan un menor Waiting Time a los procesos menos prioritarios nunca les llega el cpu. Por lo que hay starvation. 
 
 ### Colas de multinivel con feedback (aging)
 Dependiendo como sea el criterio dentro de cada cola, y los criterios para aumentar y disminuir la prioridad de los procesos si se puede resolver que no haya starvation. 
-Si tuvieramos un criterio para hacer que aumenten su prioridad los procesos que no son ejecutados para que puedan entrar en la cola menos prioritaria si dentro de la de nivel 0 usamos SJF tenemos el mismo problema que solo usando SJF. 
+Si tuvieramos un criterio para hacer que aumenten su prioridad los procesos que no son ejecutados para que puedan entrar en la cola menos prioritaria ahi podríamos no tener starvation.
+
+Tambien depende del algoritmo de scheduling de cada cola, en particular si dentro de la de nivel 0 usamos SJF tenemos el mismo problema que solo usando SJF, por lo que habría starvation. 
 
