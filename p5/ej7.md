@@ -46,7 +46,7 @@ int write(int sector, void *data, uint size){
 
 La idea de esta solucion es que cada proceso que quiera escribir algo en el disco lo haga uno a la vez cada uno encargandose y asegurandose de prender y apagar el disco. 
 
-Una posible optimizacion puede ser si un proceso ve que esta prendido el semaforo espere hasta que el otro que lo este usando termine, y al terminar el proceso que estab escribiendo chequee si hay alguien esperando para escribir. Si hay alguien esperando no apaga el semaforo y despierta al proceso y si no hay nadie apaga el disco.
+Una posible optimizacion puede ser si un proceso ve que esta prendido el semaforo espere hasta que el otro que lo este usando termine, y al terminar el proceso que estaba escribiendo chequee si hay alguien esperando para escribir. Si hay alguien esperando no apaga el semaforo y despierta al proceso y si no hay nadie apaga el disco.
 
 ```c
 const int CTE_APAGAR = 0;

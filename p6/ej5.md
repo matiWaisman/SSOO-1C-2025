@@ -1,3 +1,5 @@
+Asumo en todos los casos que ya tengo el `inodo` y la `FAT` en memoria.
+
 ### Punto A
 Queremos leer los bloques: `1, 2, 3, 5, 7, 11, 13, 17, 23`.
 
