@@ -6,14 +6,8 @@
 - Si _"Es importante que la cantidad de sectores utilizados para guardar estructuras auxiliares sea acotada, independientemente del tamaño del disco"_:
 
   En un `File System` de tipo `FAT`, el tamaño de la tabla FAT está determinado por la cantidad total de bloques del disco.  
-  Aunque pueda ocupar varios sectores, su tamaño es fijo, por lo tanto, está acotado y no crece con la cantidad de archivos o el uso del sistema.
-
-  En cambio, en un sistema basado en `inodos`, cada archivo tiene un inodo con posibles bloques de punteros directos, indirectos, dobles, etc.  
-  Esto significa que el uso de estructuras auxiliares (bloques de punteros) en disco puede crecer dinámicamente según la cantidad y el tamaño de los archivos.
-
-  Por lo tanto, si el objetivo es mantener acotado el uso de sectores dedicados a estructuras auxiliares, conviene adoptar un diseño inspirado en `FAT`.
-
-(CHEQUEAR, Si me dicen que nunca los inodos van a en memoria ser igual o mayores a un FAT entonces es mejor inodos)
+  Por lo que dependiendo del tamaño del disco el tamaño de la tabla puede crecer. 
+  En cambio un `File System` basado en `inodos` no dependen del tamaño del disco, y tienen un tamaño acotado por el tamaño de los bloques de datos y el direccionamiento. Por lo tanto es mejor elegir un `File System` basado en `inodos`.
 
 - Si _"Es importante que el tamaño máximo de archivo sólo esté limitado por el tamaño del disco"_:
 

@@ -29,5 +29,3 @@ Cada bloque de indirección simple puede direccionar 512 bloques de datos. Así 
 Para los restantes, hay que caer en la indirecta doble. Habría que cargar el bloque de indirecta doble y el primero al que apunta. 
 
 Por lo que en total se necesitan los 1280 bloques de datos + 2 bloques de indirección simple + bloque de indirecta doble + primer bloque al que apunta el bloque de indirecta doble. Entonces necesitamos acceder a 1284 bloques para procesar un archivo completo de `5 Mb`.
-
-(Chequear si no hay que solamente contar los de datos, pero no creo, o si no hay que contar los de datos)
