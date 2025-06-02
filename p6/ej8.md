@@ -5,17 +5,20 @@ Vamos a poder dividir la memoria en: $\frac{16 Gb}{2 Kb} = 2^{23}$ bloques de `2
 
 El tamaño de la tabla de archivos (la tabla de hash) va a ser igual a la cantidad de bloques por el tamaño del hash. Esto es: $2^{23} \times 16 \text{ bits} = 16 \text{ Mb}$. 
 
-Por lo que suponiendo que tenemos la tabla de la `FAT` duplicada en disco y una sola tabla de hash nos va a sobrar $16 \text{ Gb} - 24 \times 2 \text{ Mb} - 16 \text { Mb} = 15 \text{ Gb} + 857.6 { Mb}$
+Por lo que, suponiendo que tenemos la tabla de la `FAT` duplicada en disco y una sola tabla de hash, nos va a sobrar $16 \text{ Gb} - 24 \times 2 \text{ Mb} - 16 \text { Mb} = 15 \text{ Gb} + 857.6 { Mb}$.
 
 ### Punto B
-Si en promedio los archivos pesan `1 Kb` convendría que los bloques sean igual al tamaño de sector para que la gran mayoría de los archivos entren en una entrada de la `FAT` y no tener fragmentación interna, porque si los bloques fueran de `2 Kb` la gran mayoría de los archivos van a estar desperdiciando memoria y van a dejar parte de sus bloques asignados sin usar.
+Si en promedio los archivos pesan `1 Kb`, convendría que los bloques sean igual al tamaño de sector para que la gran mayoría de los archivos entren en una entrada de la `FAT` y no tener fragmentación interna, porque si los bloques fueran de `2 Kb`, la gran mayoría de los archivos va a estar desperdiciando memoria y va a dejar parte de sus bloques asignados sin usar.
 
-En cambio todos los archivos que ocupen más de `1 Kb` van a tener que usar más de un bloque. Como `1 Kb` es una unidad chica, si no el archivo no es un múltiplo exacto de `1 Kb` aun así la memoria desperdiciada en el bloque que deja vacío va a ser mucho menor que la memoria desperdiciada por los archivos que pesan `1 Kb` si los bloques fueran más grandes.
+Pero como la unidad mínima para el bloque es de dos sectores, conviene que cada bloque mida dos sectores. Porque si elegimos 4 o 8, pasaría que cada archivo está desperdiciando o la mitad del bloque o tres cuartos del bloque. 
 
-Con bloques de `1 Kb` podemos dividir la memoria en $\frac{16 Gb}{1 Kb} = 2^{24}$ bloques. 
+Como 2 sectores es una unidad chica de almacenamiento, va a pasar que los archivos de mayor tamaño no se van a ver perjudicados porque los bloques son chicos, por lo que un archivo que mida más de dos bloques va a tener que usar más de un bloque para el archivo y va a dejar poca fragmentación interna en el último, a diferencia de si los bloques fueran más grandes. 
 
-Podemos usar un tamaño de hash de `24 bits` porque con este tamaño podemos representar todos los bloques de la `FAT`. 
+Pero sí se va a ver perjudicado el tamaño de la `FAT` y la `Hash Table`, que van a ocupar más espacio en memoria. 
 
-La desventaja de esto es que la `FAT` al tener tantas entradas va a ser bastante grande a comparación de si los bloques tuvieran mayor tamaño. Pero si la cantidad de archivos que miden `1 Kb` es grande va a terminar amortizándose la memoria que no perdemos en fragmentación interna versus el tamaño de la tabla en memoria principal. 
+Con bloques de `2 Kb` podemos dividir la memoria en $\frac{16 Gb}{2 Kb} = 2^{23}$ bloques. Por lo que conviene que las direcciones sean de 24 bits para poder representar a cada uno de los bloques de la `FAT`. 
 
 ### Punto C
+Si el tamaño promedio de los archivos es de `16 MB`, para no perjudicar el tamaño de las estructuras del `File System` en memoria conviene que los bloques sean de 8 sectores, para que el archivo promedio ocupe menos bloques. 
+
+Con bloques de `8 Kb` podemos dividir el disco en $\frac{16 Gb}{8 Kb} = 2^{21}$ bloques. Para poder direccionar estos bloques, podemos usar direcciones de `24 bits`. 
