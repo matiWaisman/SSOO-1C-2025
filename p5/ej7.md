@@ -116,19 +116,18 @@ semaphore mutex_escribiendo;
 semaphore mutex_esperando_escribir;
 semaphore semaforo_ready;
 semaphore semaforo_prendio;
-semaphore mutex_esperando_a_prender; // Este semaforo es para manejar la variable alguien_esperando_a_prender. Si pudiera usar variables atomicas seria mas facil y no tendria 45 mil semaforos
-bool alguien_esperando_a_prender;
+semaphore semaforo_apago;
 int driver_init(){
     cantidad_esperando_escribir = 0;
-    alguien_esperando_a_prender = false;
+    iteraciones_hasta_que_prenda = 0; // Esta variable la seteo en un numero mayor a 0 cuando espero a que se prenda
+    iteraciones_hasta_que_apague = 0; // Esta variable la seteo en un numero mayor a 0 cuando espero a que se apague
     irq_register(6, handler_ready);
     irq_register(7, handler_50);
     sema_init(mutex_escribiendo, 1);
     sema_init(mutex_esperando_escribir, 1);
     sema_init(semaforo_ready, 0);
     sema_init(semaforo_prendio, 0);
-    sema_init(mutex_esperando_a_prender, 1);
-
+    sema_init(semaforo_apago, 0);
     return 0;
 }
 
@@ -145,14 +144,20 @@ void handler_ready(){
 
 // En este caso no quiero prender el semaforo hasta no estar seguro que hay alguien esperandolo. Porque si no podria pasar de largo la proxima vez
 void handler_50(){
-    mutex_esperando_a_prender.wait();
-    if(alguien_esperando_a_prender){
+    if(iteraciones_hasta_que_prenda > 0){
         if(IN(DOR_STATUS)){
-            alguien_esperando_a_prender = false;
-            semaforo_prendio.signal();
+            iteraciones_hasta_que_prenda--;
+            if(iteraciones_hasta_que_prenda = 0){
+                semaforo_prendio.signal();
+            }
         }
     }
-    mutex_esperando_a_prender.signal();
+    if(iteraciones_hasta_que_apague > 0){
+        iteraciones_hasta_que_apague--;
+        if(iteraciones_hasta_que_apague = 0){
+            semaforo_apago.signal();
+        }
+    }
     return 0;
 }
 
@@ -168,10 +173,8 @@ int write(int sector, void *data, uint size){
     // Primero checkeo si esta prendido o apagado
     if(in(DOR_STATUS) == 0){
         // Lo prendo y espero a que se pueda usar
-        mutex_esperando_a_prender.wait();
-        alguien_esperando_a_prender = true; 
-        mutex_esperando_a_prender.signal();
         out(DOR_IO, CTE_PRENDER);
+        iteraciones_hasta_que_prenda = 2;
         semaforo_prendio.wait(); // Cuando nos desbloquiemos es que va a estar prendido
     }
     // Pasamos los datos del usuario a la memoria del kernel
@@ -198,7 +201,8 @@ int write(int sector, void *data, uint size){
     // Si hay alguien esperando no apagamos el motor. A esta altura como mínimo está en 1, si es mayor o igual a 2 es porque hay al menos alguien esperando
     if(cantidad_esperando_escribir < 2){ 
         out(DOR_IO, CTE_APAGAR);
-        sleep(200);
+        iteraciones_hasta_que_apague = 5;
+        semaforo_apago.wait();
     }
     cantidad_esperando_escribir--;
     mutex_esperando_escribir.signal();

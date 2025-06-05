@@ -19,7 +19,7 @@ void handler_finished(){
 }
 
 int driver_write(char *buffer, uint size){
-    int intentos_tinta = 0;
+    int intentos_tinta = 0; // Variable no compartida 
     mutex.wait();
     // Pasamos los datos del usuario a la memoria del kernel
     // Pido la memoria necesaria 
