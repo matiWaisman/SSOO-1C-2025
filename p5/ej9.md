@@ -40,6 +40,7 @@ void driver_unload() {
     return 0;
 }
 
+// Capaz estaria mejor encerrar todo en ambos mutexs. Hasta que no podes interactuar con el teclado y actualizar las estructuras internas no podes.
 int driver_open() {
     // Debe conectar un proceso, asignándole un ID y retornándolo,
     // o retornando -1 en caso de falla.
@@ -52,6 +53,11 @@ int driver_open() {
             break;
         }
     }
+    // Si no encontramos un lugar devolvemos -1
+    if(res == -1){
+        mutex_estructuras_internas.signal();
+        return res;
+    }
     mutex_estructuras_internas.signal();
     // Le indico al teclado que se conecto una aplicacion al teclado
     mutex_interaccion_con_teclado.wait();
@@ -61,6 +67,7 @@ int driver_open() {
     return res; 
 }
 
+// Capaz estaria mejor encerrar todo en ambos mutexs. Hasta que no podes interactuar con el teclado y actualizar las estructuras internas no podes.
 void driver_close(int id) {
     // Debe desconectar un proceso dado por parámetro.
     // Le avisamos al teclado que se desconecto una aplicacion
@@ -68,7 +75,10 @@ void driver_close(int id) {
     OUT(KEYB_REG_AUX, id);
     OUT(KEYB_REG_STATUS, APP_DOWN);
     mutex_interaccion_con_teclado.signal();
-    // Nos guardamos en nuestra estructura interna que se libero un lugar
+    // Nos guardamos en nuestra estructura interna que se libero un lugar. 
+    // Me parece mejor primero avisarle al teclado y despues actualizar nuestras estructuras internas porque si no 
+    // Podria pasar una race condition en la que en las estructuras internas se libero el lugar pero el teclado no sabe 
+    // Que se desconecto un cliente y le estan pidiendo que conecte a otro. 
     mutex_estructuras_internas.wait();
     procesos_activos[id] = 0;
     buffer_start[id] = 0;
@@ -81,16 +91,23 @@ void driver_close(int id) {
 
 int driver_read(int id, char* buffer, int length) {
     mutex_estructuras_internas.wait();
-    if(procesos_activos[id] == 0){
+    if(procesos_activos[id] == 0){ // Si me piden leer de un id que no esta conectado devuelvo cero, o se podria devolver un codigo de error como -1
         mutex_estructuras_internas.signal();
         return 0;
     }
     mutex_estructuras_internas.signal();
+
     mutex_interaccion_con_teclado.wait();
-    int cantidad_bytes_escritos = int cantidad_bytes_escritos = get_buffer_length(id);
-    if(cantidad_bytes_escritos > length){
+    int cantidad_bytes_escritos = get_buffer_length(id);
+    if(cantidad_bytes_escritos >= length){ // Esta disponible la cantidad de informacion que queremos leer
         copy_from_buffer(id, buffer, length); // Entiendo que esto actualiza buffer_end[id]
         mutex_interaccion_con_teclado.signal();
+        // Actualizamos el start. Falta completar
+        //mutex_estructuras_internas.wait();
+        //for(int i = 0; i < length; i++){
+        //    buffer_end[i].getAndInc();
+        //}
+        //mutex_estructuras_internas.signal();
     }
     else{ // Nos tenemos que bloquear hasta que esten disponibles nuestros caracteres
         mutex_interaccion_con_teclado.signal();
@@ -120,22 +137,32 @@ void handler_keyb(){
     char ascii = keycode2ascii(keycode);
     mutex_interaccion_con_teclado.wait();
     if (identificador == 0){ // En este caso le tenemos que escribir a todos los procesos
-        bool pude = write_to_all_buffers(ascii); // Preguntar que hacer en caso de no podes escribir en todos
+        bool pude = write_to_all_buffers(ascii); 
         if(!pude){
             OUT(KEYB_REG_CONTROL, READ_FAILED);
             mutex_interaccion_con_teclado.signal();
             return;
         }
+        else{
+            OUT(KEYB_REG_CONTROL, READ_OK);
+        }
     }
     else{ // En este solo a identificador - 1
-        write_to_buffer(identificador - 1, ascii);
-        OUT(KEYB_REG_CONTROL, READ_OK);
+        bool pude = write_to_buffer(identificador - 1, ascii);
+        if(!pude){
+            OUT(KEYB_REG_CONTROL, READ_FAILED);
+            mutex_interaccion_con_teclado.signal();
+        }
+        else{
+            OUT(KEYB_REG_CONTROL, READ_OK);
+        }
     }
     mutex_interaccion_con_teclado.signal();
     mutex_estructuras_internas.wait();
-    if (identificador == 0){
+    if (identificador == 0){ // Si hay que escribir a todos
         for(int i = 0; i < N_APLICACIONES_POSIBLES; i++){
-            if(cantidad_datos_esperando[i] > 0){
+            buffer_end[i].getAndInc(); // Le sumamos uno de manera atomica al buffer end
+            if(cantidad_datos_esperando[i] > 0){ // Si esta esperando datos por leer
                 cantidad_datos_esperando[i]--;
                 if(cantidad_datos_esperando[i] == 0){
                     mutex_esperando_datos[i].signal();
@@ -143,12 +170,12 @@ void handler_keyb(){
             }
         }
     }
-    // Checkear
-    else{
-        if(cantidad_datos_esperando[identificador - 1] > 0){
+    else{ // Si hay que escribirle a uno solo
+        buffer_end[identificador - 1].getAndInc(); // Le sumamos uno de manera atomica al buffer end
+        if(cantidad_datos_esperando[identificador - 1] > 0){ // Si esta esperando datos por leer
             cantidad_datos_esperando[identificador - 1]--;
             if(cantidad_datos_esperando[identificador - 1] == 0){
-                    mutex_esperando_datos[identificador - 1].signal();
+                mutex_esperando_datos[identificador - 1].signal();
             }
         }
     }
