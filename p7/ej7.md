@@ -1,0 +1,3 @@
+"Escribir el valor de retorno de una función utilizando un buffer overflow sobre un buffer en stack dentro de dicha función." Sigue siendo posible aunque se use `stack randomization`, porque el stack sigue teniendo el mismo formato de tener junto las variables locales, la direccion de retorno y los parametros. Por lo que sin importar en donde se encuentre el stack aun asi vamos a poder seguir pisando la direccion de retorno. No se ve affectado el ataque de `Buffer Overflow` por esta medida. 
+
+# Preguntar
