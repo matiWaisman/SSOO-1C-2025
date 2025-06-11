@@ -20,11 +20,26 @@ Por lo tanto se puede ingresar un string de más de 80 caracteres que va a sobre
 
 Recordando cómo se veía la memoria de una función: 
 
+Direcciones de memoria (crece hacia arriba)
+↑   Dirección más alta 
+│   [ Parámetros de la función ]
+│   [ Dirección de retorno ]
+│   [ ebp ]
+│   [ buf[0-7] ]  
+│         .          
+│         .
+│   [ buf[1017-1024] ]
+│   [ i ]
+│   [ v ]
+↓   Dirección más baja
+
 ```text
 +-----------------------------+  
 | Parámetros de la función   |  
 +-----------------------------+
 | Dirección de retorno       |   
++-----------------------------+
+| EBP                        |   
 +-----------------------------+
 | Variables locales          |  
 +-----------------------------+ 

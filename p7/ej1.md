@@ -7,9 +7,9 @@ Si la función de hash entrega valores de 64 bits, va a haber $2^{64}$ hashes di
 La probabilidad de acertar al valor del hash almacenado usando una contraseña que hashee al mismo valor es de $\frac{1}{2^{64}}$, o sea 1 sobre 18.4 cuatrillones. Que en notación científica se puede escribir como $5,42 \times 10^{-20}$.
 
 ## Punto C
-(No sé de probabilidad. Hay que chequear.)
+(No sé de probabilidad. Hay que chequear)
 
-Si por segundo podemos probar mil millones de contraseñas con hashes distintos: 
+Si por segundo podemos probar mil millones de contraseñas con hashes *distintos*: 
 
 - En un segundo tenemos un $5,42 \times 10^{-20} \times 10^{9} \times 100$% = $5,42 \times 10^{-9}$ % de chances de acertar. 
 

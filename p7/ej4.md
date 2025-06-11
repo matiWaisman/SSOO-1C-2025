@@ -5,20 +5,20 @@ Concentrandome unicamente en la parte del stack en donde se guardan las variable
 Como primero se declara `realpass` y despues el struct, y el stack crece de arriba hacia abajo, entonces en memoria se va a ver como: 
 
 <pre>
-Direcciones de memoria (crece hacia abajo)
+Direcciones de memoria (crece hacia arriba)
 ↑   Dirección más alta 
-│   [ realpass[24-32] ]  <span style="color:red"><-- Hasta acá</span>
+│   [ realpass[24-32] ]  <span style="color:red"><-- Con el segundo fgets tiene control hasta acá</span>
 │   [ realpass[16-23] ]           
 │   [ realpass[8-15] ]
 │   [ realpass[0-7] ]
-│   [ user.name[24-32] ]  <span style="color:blue"><-- Hasta acá</span>
-│   [ user.name[16-23] ]           
-│   [ user.name[8-15] ]
-│   [ user.name[0-7] ] <span style="color:red"><-- Con el primer fgets el usuario tiene control desde acá</span>
-│   [ user.pass[24-32] ]  
+│   [ user.pass[24-32] ]  <span style="color:blue"><-- Con el primer fgets tiene control hasta acá</span>
 │   [ user.pass[16-23] ]           
 │   [ user.pass[8-15] ]
-│   [ user.pass[0-7] ] <span style="color:blue"><-- Con el segundo fgets el usuario tiene control desde acá</span>
+│   [ user.pass[0-7] ] <span style="color:red"><-- Con el segundo fgets el usuario tiene control desde acá</span>
+│   [ user.name[24-32] ]  
+│   [ user.name[16-23] ]           
+│   [ user.name[8-15] ]
+│   [ user.name[0-7] ] <span style="color:blue"><-- Con el primer fgets el usuario tiene control desde acá</span>
 ↓   Dirección más baja
 </pre>
 
