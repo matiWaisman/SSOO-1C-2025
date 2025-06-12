@@ -25,6 +25,4 @@ Direcciones de memoria (crece hacia arriba)
 Al final el usuario va a tener acceso a toda la parte de variables locales del stack porque cada `fgets` le da acceso a dos variables. 
 
 ## Punto B
-Ingresando como nombre el usuario correcto y para los siguientes 32 bits una cadena arbitraria. 
-
-Si cuando nos piden la password ponemos esa cadena arbitraria podemos ingresar.
+Ingresando como nombre el usuario correcto y cuando nos pidan la contraseña ponemos 64 bits que los primeros 32 bits son iguales a los segundos con eso vamos a poder ingresar. 
