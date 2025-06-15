@@ -2,7 +2,7 @@ Si un proceso abre el directorio `/home` y le envía el descriptor a otro, supon
 
 Para que el otro proceso pueda conseguir el nombre del inodo (`home`) lo que habría que hacer es: 
 
-- Buscar el número de `inodo` con del `fd` que nos pasan. (PREGUNTAR SI CONSIGO EL NUMERO DE INODO O EL INODO SOLO) 
+- Buscar el número de `inodo` con del `fd` que nos pasan. 
 - A partir de la función `load_inode`, cargamos el inodo en memoria usando el número que conseguimos del `fd`.
 - Nos guardamos el número de inodo de `.`. 
 - Consigo el numero de `inodo` de `root` por el hard link de `..` del inodo del directorio `/home`. 
