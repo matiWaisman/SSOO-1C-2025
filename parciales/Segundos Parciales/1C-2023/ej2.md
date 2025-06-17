@@ -75,7 +75,7 @@ int driver_write(int * user_input, int size){
 
 int driver_read(int * user_buffer, int size){
     sem.wait();
-    // SI estamos aca abajo es porque se registro al menos una lectura
+    // Si estamos aca abajo es porque se registro al menos una lectura
     int promedio = IN(CURRENT_AVERAGE);
     copy_to_user(user_buffer, &promedio, sizeof(promedio));
     return size; 

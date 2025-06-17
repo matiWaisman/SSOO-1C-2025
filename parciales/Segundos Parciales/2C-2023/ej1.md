@@ -21,8 +21,9 @@ void mi_ls_r(char * path){
     while(bloque_actual != -1){
         read_block(bloque_actual, buffer);
         struct FatDirEntry * puntero_dir_entries = (struct FatDirEntry *) buffer;
+        int cantidad_dir_entries_en_bloque = BLOCK_SIZE / sizeof(FATDirEntry);
         // Como por la consigna el tamaño de los structs es multiplo del tamaño del bloque itero por los dir entries dentro del bloque sin preocuparme
-        for(int i = 0; i < BLOCK_SIZE / sizeof(FATDirEntry); i++){
+        for(int i = 0; i < cantidad_dir_entries_en_bloque; i++){
             printf("%s", puntero_dir_entries->filename);
             if(puntero_dir_entries->attribute == 2){
                 mi_ls_r(path + "/" + puntero_dir_entries->filename); // Es pseudocodigo loko, no pasa nada

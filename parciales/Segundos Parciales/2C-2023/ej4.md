@@ -1,0 +1,1 @@
+El problema está en el `strcpy` de la linea 9. Podemos hacer un buffer overflow. 

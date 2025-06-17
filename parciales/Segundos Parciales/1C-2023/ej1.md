@@ -40,10 +40,10 @@ void my_grep(char* palabra, char* path){
 			struct Ext2FSDirEntry *dirEntry = (struct Ext2FSDirEntry *) dirEntryBytes;
 
 			if(dirEntry->file_type == 2){
-                my_grep(palabra, path + dir_entry->name); // Es pseudocodigo loko, no pasa nada.
+                my_grep(palabra, path + "/" + dir_entry->name); // Es pseudocodigo loko, no pasa nada.
             }
             if(dirEntry->file_type == 1){
-                grep_palabra_en_archivo(palabra, path + dir_entry->name); // Es pseudocodigo loko, no pasa nada.
+                grep_palabra_en_archivo(palabra, path + "/" + dir_entry->name); // Es pseudocodigo loko, no pasa nada.
             }
 
 			bytes_leidos += (unsigned int) dirEntry->record_length;

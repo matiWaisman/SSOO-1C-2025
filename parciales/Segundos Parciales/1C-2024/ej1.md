@@ -33,12 +33,12 @@ struct Ext2FSInode* get_file(struct Ext2FSInode * from, char * arch_nombre){
 
 	for(int nro_bloque=0; nro_bloque<cantidad_de_bloques_en_dir; nro_bloque++) {
 
-		// Usamos memcpy para que sea mas rapido
+		// Uso memcpy para que sea mas rapido
 		if(nro_bloque != 0) {
 			memcpy(bloques,bloques+BLOCK_SIZE,BLOCK_SIZE);
 		}
 		if(nro_bloque == cantidad_de_bloques_en_dir-1) {
-            // Achicamos la memoria que no se usa
+            // Achico la memoria que no se usa
 			bloques = (unsigned char *) realloc(bloques,BLOCK_SIZE);
 		} else {
 			unsigned int right_block_address = get_block_address(from,nro_bloque+1);
@@ -61,7 +61,7 @@ struct Ext2FSInode* get_file(struct Ext2FSInode * from, char * arch_nombre){
 			if(!strncmp(dirEntry->name,arch_nombre,max_length)) { // Si son iguales
 				struct Ext2FSInode *inodo = load_inode(dirEntry->inode);
 				free(bloques);
-                if(arch_nombre == "c.txt"){ // Si estabamos explorando el directorio B devolvemos el inodo directamente
+                if(!strcmp(arch_nombre, "c.txt")){ // Si estabamos explorando el directorio B devolvemos el inodo directamente
                     return inodo;
                 }
                 else{ //Si estabamos explorando el directorio A y encontramos B ahora buscamos el archivo c.txt.
@@ -78,10 +78,14 @@ struct Ext2FSInode* get_file(struct Ext2FSInode * from, char * arch_nombre){
 }
 ```
 
+Y habría que llamar a la función como `get_file(a, "b")`. 
+
 ## Punto B
 Para renombrar el archivo `/home/juan/listado.txt` a `/home/maria/archivo.txt` primero habria que recorrer desde el directorio raiz hasta `listado.txt` de manera similar al ejercicio anterior. Una vez que encontramos la direntry asociada a `listado.txt` hay que guardarnos el numero de inodo y eliminar la direntry del directorio de juan. 
 
 Luego hay que recorrer desde el directorio raiz al directorio de maria y en el directorio de maria recorrer los bloques de datos del directorio y cuando encontremos un espacio disponible hacemos una escritura al disco para agregar una dir entry nueva llenando todos los campos, poniendole el nombre `archivo.txt` y poniendole como numero de inodo el que nos habiamos guardado previamente. 
+
+Por lo que van a ser dos escrituras a disco, una para borrar la dir entry vieja y una para crear la dir entry nueva.
 
 ## Punto C
 Como los sistemas basados en inodos permiten links simbolicos y hard links si un programa realiza una busqueda similar a la del punto A de manera recursiva, si no se tiene cuidado con los enlaces simbolicos puede facilmente ocurrir una recursion infinita si dentro de un directorio hay un simbolic link a un archivo de "mas abajo" del arbol de archivos y este archivo que esta mas bajo vuelve a apuntar al de arriba. Cuando querramos leer el contenido del archivo de mas arriba vamos a tener que ir a buscar el archivo de mas abajo, y cuando querramos leer el contenido del archivo de mas abajo vamos a tener que ir al de arriba, teniendo un ciclo infinito. 

@@ -1,3 +1,5 @@
+Es el 10 de la guia 6, copio y pego :P
+
 `struct_entrada_directorio` deberia tener un nombre, de tamaño fijo, la direccion del bloque inicial y el tamaño del archivo. 
 
 ```c
