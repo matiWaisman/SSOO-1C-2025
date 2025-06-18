@@ -3,6 +3,6 @@ Si ya tenemos acceso al `inodo` asociado al archivo: Para leer un archivo de `40
 
 ### Punto B
 Si ya tenemos acceso al `inodo` asociado al archivo: Para leer un archivo de `80 Kb` va a haber que, como mínimo, leer 20 bloques de datos. Como con los punteros directos solo podemos leer los primeros diez bloques, ahora vamos a tener que usar la indirección simple para poder leer los diez bloques que faltan.  
-Entonces, también vamos a tener que leer el bloque de la indirección simple.
+Entonces, también vamos a tener que leer el bloque de la indirección simple para conseguir la dirección de los 10 bloques restantes.
 
 Por lo que, en total, vamos a tener que leer 21 bloques.
