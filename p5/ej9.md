@@ -1,3 +1,5 @@
+FALTA TERMINAR
+
 ```c
 const int N_APLICACIONES_POSIBLES = 3;
 char input_mem[3][100];
