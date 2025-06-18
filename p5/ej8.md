@@ -48,6 +48,7 @@ int driver_write(char *buffer, uint size){
             semaforo_imprimiendo.wait();
         }
         else{
+            mutex.signal();
             return -1; // Especie de codigo de error.
         }  
     }
