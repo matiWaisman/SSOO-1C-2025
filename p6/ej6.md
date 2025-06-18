@@ -23,13 +23,13 @@ La búsqueda lineal en `FAT` es más fácil de implementar porque las *directory
 En un sistema basado en `ext2`, si `/pepe.txt` es un enlace simbólico (*symbolic link*) a `/home/aprobar.txt`, el proceso sería el siguiente:
 
 Primero, se busca dentro del inodo de `/` (ya cargado en memoria) la entrada `pepe.txt`.  
-Esto implica recorrer los bloques de datos del directorio raíz leyendo sus entradas. Supongamos que se necesitan `r` lecturas de bloques de disco para encontrar la entrada.
+Esto implica recorrer los bloques de datos del directorio raíz leyendo sus entradas. Supongamos que se necesitan `r` lecturas de bloques de disco para encontrar la entrada. Donde r puede tener contados bloques de indirecciones.
 
 Una vez encontrada la entrada `pepe.txt`, se accede al inodo correspondiente.  
 Dado que se trata de un enlace simbólico, su contenido no apunta a los bloques de datos del archivo real, sino que contiene un path absoluto (`/home/aprobar.txt`) dentro de su primer bloque de datos. 
 
-Luego, al parsear el path `/home/aprobar.txt`, es necesario nuevamente buscar en el directorio raíz (`/`) la entrada `home`. Supongamos que eso toma `r'` bloques de lectura.  
-Finalmente, se accede al directorio `home` y se leen `h` bloques hasta encontrar `aprobar.txt`.
+Luego, al parsear el path `/home/aprobar.txt`, es necesario nuevamente buscar en el directorio raíz (`/`) la entrada `home`. Supongamos que eso toma `r'` bloques de lectura ( Donde `r'` puede tener contados bloques de indirecciones).
+Finalmente, se accede al directorio `home` y se leen `h` bloques hasta encontrar `aprobar.txt` ( Donde `h` puede tener contados bloques de indirecciones.).
 
 En total, se deben leer `r + 1 + r' + h` bloques de disco.
 
