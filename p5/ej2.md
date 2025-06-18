@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
             break;
         }
     }
-    close("/dev/cronometro");
+    close(cronometro);
     exit(EXIT_SUCCESS);
 }
 ```
