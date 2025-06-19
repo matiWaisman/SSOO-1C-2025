@@ -20,7 +20,7 @@ Por lo tanto se puede ingresar un string de más de 80 caracteres que va a sobre
 
 Recordando cómo se veía la memoria de una función: 
 ```text
-Direcciones de memoria (crece hacia arriba)
+Direcciones de memoria 
 ↑   Dirección más alta 
 │   [ Parámetros de la función ]
 │   [ Dirección de retorno ]
