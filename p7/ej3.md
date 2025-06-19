@@ -19,7 +19,7 @@ Por lo tanto se puede ingresar un string de más de 80 caracteres que va a sobre
 ## Punto B
 
 Recordando cómo se veía la memoria de una función: 
-
+```text
 Direcciones de memoria (crece hacia arriba)
 ↑   Dirección más alta 
 │   [ Parámetros de la función ]
@@ -32,7 +32,7 @@ Direcciones de memoria (crece hacia arriba)
 │   [ i ]
 │   [ v ]
 ↓   Dirección más baja
-
+```
 ```text
 +-----------------------------+  
 | Parámetros de la función   |  
