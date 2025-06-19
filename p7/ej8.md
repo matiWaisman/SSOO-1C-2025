@@ -7,10 +7,10 @@ Otras posibilidades mejores o con más sentido serían usar `;`, que hace que se
 Si ahora el tercer parámetro de `snprintf` es `ls \" %s\` aun así podemos hacer `/home ; cat /etc/passwd`. Nos va a pedir que ingresemos un carácter más que está esperando por el último `\` y, después de eso, nos va a mostrar el `cat`.
 
 ## Punto C
-Si no se puede usar `;`, se pueden usar pipes o el `&&` o `&`, como mencioné en el A.
+Si no se puede usar `;`, se pueden usar pipes o el `&&` o `&`, como mencioné en el A. O tambien se puede cambiar el path para ejecutar a `ls` por un programa nuestro, un `enviroment variable attack`.
 
 ## Punto D
-Para que no tenga problemas de seguridad, el `wrapper` habría que sanitizar el input.
+Para que no tenga problemas de seguridad, el `wrapper` habría que sanitizar el input y usar el path absoluto de ls.
 
 Luego de hacer el `snprintf`, podemos chequear si `cmd` contiene `;`, `|`, `&` o `&&` y, si tiene, ni ejecutar el `system`, o modificar el código así: 
 
@@ -18,7 +18,7 @@ Luego de hacer el `snprintf`, podemos chequear si `cmd` contiene `;`, `|`, `&` o
 #define BUF_SIZE 1024
 void wrapper_ls(const char * dir) {
     char cmd[BUF_SIZE];
-    snprintf(cmd, BUF_SIZE-1, "ls %s", dir);
+    snprintf(cmd, BUF_SIZE-1, "/bin/ls %s", dir);
     char *cmd_sanitized = strtok(cmd, " ;&|() ");
     system(cmd_sanitized);
 }
